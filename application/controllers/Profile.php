@@ -29,15 +29,17 @@ class Profile extends CI_Controller
         $db = $this->admin->get('user', ['id_user' => $this->input->post('id_user', true)]);
         $username = $this->input->post('username', true);
         $email = $this->input->post('email', true);
-
-        $uniq_username = $db['username'] == $username ? '' : '|is_unique[user.username]';
-        $uniq_email = $db['email'] == $email ? '' : '|is_unique[user.email]';
-
+    
+        // Check if $db is not null before accessing its elements
+        $uniq_username = isset($db['username']) && $db['username'] == $username ? '' : '|is_unique[user.username]';
+        $uniq_email = isset($db['email']) && $db['email'] == $email ? '' : '|is_unique[user.email]';
+    
         $this->form_validation->set_rules('username', 'Username', 'required|trim|alpha_numeric' . $uniq_username);
         $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email' . $uniq_email);
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim');
         $this->form_validation->set_rules('no_telp', 'Nomor Telepon', 'required|trim|numeric');
     }
+    
 
     private function _config()
     {
